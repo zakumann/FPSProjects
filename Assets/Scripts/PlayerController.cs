@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,6 +13,10 @@ public class PlayerController : MonoBehaviour
 
     public Transform camTrans;
 
+    public float mouseSensitivity;
+    public bool invertX;
+    public bool invertY;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,13 +26,29 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moveInput.x = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
-        moveInput.z = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
+        //moveInput.x = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
+        //moveInput.z = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
 
-        charCon.Move(moveInput);
+        Vector3 vertMove = transform.forward * Input.GetAxis("Vertical");
+        Vector3 horiMove = transform.right * Input.GetAxis("Horizontal");
+
+        moveInput = horiMove + vertMove;
+        moveInput.Normalize();
+        moveInput = moveInput * moveSpeed;
+
+        charCon.Move(moveInput * Time.deltaTime);
 
         // control camera rotation
-        Vector2 mouseInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+        Vector2 mouseInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")) * mouseSensitivity;
+
+        if(invertX)
+        {
+            mouseInput.x = -mouseInput.x;
+        }
+        if(invertY)
+        {
+            mouseInput.y = -mouseInput.y;
+        }
 
         transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y + mouseInput.x, transform.rotation.eulerAngles.z);
 
