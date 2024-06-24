@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
 
     public Transform camTrans;
 
+    //mouse
     public float mouseSensitivity;
     public bool invertX;
     public bool invertY;
@@ -20,7 +21,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        charCon = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
@@ -29,23 +30,24 @@ public class PlayerController : MonoBehaviour
         //moveInput.x = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
         //moveInput.z = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
 
-        Vector3 vertMove = transform.forward * Input.GetAxis("Vertical");
-        Vector3 horiMove = transform.right * Input.GetAxis("Horizontal");
+        float vertMove = Input.GetAxis("Vertical");
+        float horiMove = Input.GetAxis("Horizontal");
 
-        moveInput = horiMove + vertMove;
         moveInput.Normalize();
-        moveInput = moveInput * moveSpeed;
 
-        charCon.Move(moveInput * Time.deltaTime);
+        //Creating the moving vector
+        Vector3 move = transform.right * horiMove + transform.forward* vertMove;
+
+        charCon.Move(move * moveSpeed * Time.deltaTime);
 
         // control camera rotation
         Vector2 mouseInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")) * mouseSensitivity;
 
-        if(invertX)
+        if (invertX)
         {
             mouseInput.x = -mouseInput.x;
         }
-        if(invertY)
+        if (invertY)
         {
             mouseInput.y = -mouseInput.y;
         }
