@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed, gravityModifier, jumpPower;
+    public float moveSpeed, gravityModifier, jumpPower, runSpeed = 12f;
     public CharacterController charCon;
 
     private Vector3 moveInput;
@@ -44,6 +44,14 @@ public class PlayerController : MonoBehaviour
         Vector3 hori = transform.right * horiMove;
 
         moveInput = vert + hori;
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            moveInput = moveInput * runSpeed;
+        }else
+        {
+            moveInput = moveInput * moveSpeed;
+        }
+
         moveInput = moveInput * moveSpeed;
 
         moveInput.y = yStore;
