@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour
     public GameObject bullet;
     public Transform firePoint;
 
+    public GameObject impactEffect;
+    public float range = 500f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -111,8 +114,18 @@ public class PlayerController : MonoBehaviour
 
         // Handle Shooting
         if(Input.GetMouseButtonDown(0))
-        {
+{
             Instantiate(bullet, firePoint.position, firePoint.rotation);
+            RaycastHit hit;
+            if (Physics.Raycast(camTrans.position, camTrans.forward, out hit, range))
+            {
+                Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+                firePoint.LookAt(hit.point);
+            }
+            else
+            {
+                firePoint.LookAt(camTrans.position + (camTrans.forward * range));
+            }
         }
 
         anim.SetFloat("moveSpeed", moveInput.magnitude);

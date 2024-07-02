@@ -8,6 +8,8 @@ public class BulletController : MonoBehaviour
 
     public Rigidbody theRB;
 
+    private GameObject impactEffect;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +31,11 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if(other.gameObject.tag == "Enemy")
+        {
+            Destroy(other.gameObject);
+        }
+
         Destroy(gameObject);
     }
 }
